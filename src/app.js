@@ -31,6 +31,11 @@ app.get("/mario/:id", async(req,res)=>{
     try {
         
         let characters = await marioModel.find({_id:id});
+
+        if(characters.length === 0){
+            res.status(400).send({message: "error.message"});
+            return;
+        }
         res.send(characters[0]);
         return;
 
@@ -57,8 +62,29 @@ app.post("/mario",(req,res)=>{
     // console.log(name);
     // console.log(weight);
     // console.log(mario);
-    res.send(mario);
+    res.status(201).send(mario);
 })
+
+app.patch("/mario/:id",(req,res)=>{
+    
+    try {
+
+        let id = req.params.id;
+        let updateObject = req.body;
+
+        await marioModel.update(
+            { _id: id },
+            {$set: updateObject}
+        );
+
+        res.status(201).send(mario);
+        
+    } catch (error) {
+        res.status(400).send({message: error.message});
+    }
+})
+
+
 
 
 module.exports = app;
