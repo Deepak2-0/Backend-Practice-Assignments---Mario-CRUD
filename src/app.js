@@ -65,7 +65,7 @@ app.post("/mario",(req,res)=>{
     res.status(201).send(mario);
 })
 
-app.patch("/mario/:id",(req,res)=>{
+app.patch("/mario/:id",async (req,res)=>{
     
     try {
 
