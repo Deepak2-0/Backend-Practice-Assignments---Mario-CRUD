@@ -72,7 +72,7 @@ app.patch("/mario/:id",async (req,res)=>{
         let id = req.params.id;
         let updateObject = req.body;
 
-        let check = await marioModel.find({_id :id});
+        //let check = await marioModel.find({_id :id});
 
         // if(check.length === 0) throw new Error;
 
@@ -94,7 +94,33 @@ app.patch("/mario/:id",async (req,res)=>{
     }
 })
 
+app.delete("/mario/:id",async (req,res)=>{
+    
+    try {
 
+        let id = req.params.id;
+
+        let data = await marioModel.findById({_id:id});
+
+        if(!data){
+            // res.status(400).send({message: "error.message"});
+            // return;
+            throw new error;
+        }
+
+        await marioModel.deleteOne(
+            { _id: id }
+        );
+
+        // console.log(updateObject);
+        // console.log(data);
+
+        res.status(200).send({message: 'character deleted'});
+        
+    } catch (error) {
+        res.status(400).send({message: error.message});
+    }
+})
 
 
 module.exports = app;
