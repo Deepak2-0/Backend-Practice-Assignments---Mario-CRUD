@@ -74,7 +74,7 @@ app.patch("/mario/:id",async (req,res)=>{
 
         let check = await marioModel.find({_id :id});
 
-        if(check.length === 0) throw new Error;
+        // if(check.length === 0) throw new Error;
 
         await marioModel.update(
             { _id: id },
@@ -84,8 +84,8 @@ app.patch("/mario/:id",async (req,res)=>{
 
         let data = await marioModel.find({_id:id})
 
-        console.log(updateObject);
-        console.log(data);
+        // console.log(updateObject);
+        // console.log(data);
 
         res.status(201).send(data);
         
