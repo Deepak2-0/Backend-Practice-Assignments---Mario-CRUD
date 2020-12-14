@@ -18,30 +18,32 @@ app.use(bodyParser.json())
 
 // mario.save();
 
-app.get("/mario", async(req,res)=>{
+app.get("/mario", (req,res)=>{
 
-    let characters = await marioModel.find({});
-    res.send(characters);
+    // let characters = await marioModel.find({});
+    // res.send(characters);
+
+    marioModel.find({}, (err, data) => {
+        if(err){
+            res.status(400).json({"message": error.message});
+        }
+        else{
+            res.json(data);
+        }
+    });
 });
 
-app.get("/mario/:id", async(req,res)=>{
+app.get("/mario/:id", (req,res)=>{
 
-    let id = req.params.id;
-
-    try {
-        
-        let characters = await marioModel.find({_id:id});
-
-        if(characters.length === 0){
-            res.status(400).send({message: "error.message"});
-            return;
+    marioModel.findOne({
+        _id: id,
+    }).then((err,data) => {
+        if (err) {
+            res.status(400).json({"message": error.message});
+        } else{
+            res.json(data);
         }
-        res.send(characters[0]);
-        return;
-
-    } catch (error) {
-        res.status(400).send({message: error.message});  
-    }
+    });
 });
 
 
@@ -82,7 +84,7 @@ app.patch("/mario/:id",async (req,res)=>{
             {returnOriginal: false}
         );
 
-        let data = await marioModel.find({_id:id})
+        let data = await marioModel.findById({_id:id})
 
         // console.log(updateObject);
         // console.log(data);
