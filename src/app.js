@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const bodyParser = require("body-parser");
-const marioModel = require('./models/marioChar');
+const marioChar = require('./models/marioChar');
 
 // Middlewares
 app.use(express.urlencoded());
@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-// const mario = new marioModel({
+// const mario = new marioChar({
 //     name:"Luigi",
 //     weight: 60
 // })
@@ -20,10 +20,10 @@ app.use(bodyParser.json())
 
 app.get("/mario", (req,res)=>{
 
-    // let characters = await marioModel.find({});
+    // let characters = await marioChar.find({});
     // res.send(characters);
 
-    marioModel.find({}, (err, data) => {
+    marioChar.find({}, (err, data) => {
         if(err){
             res.status(400).json({"message": error.message});
         }
@@ -35,7 +35,7 @@ app.get("/mario", (req,res)=>{
 
 app.get("/mario/:id", (req,res)=>{
 
-    marioModel.findOne({
+    marioChar.findOne({
         _id: id,
     }).then((err,data) => {
         if (err) {
@@ -56,7 +56,7 @@ app.post("/mario",(req,res)=>{
         return;
     }
 
-    const mario = new marioModel({
+    const mario = new marioChar({
         name,
         weight
     })
@@ -74,17 +74,17 @@ app.patch("/mario/:id",async (req,res)=>{
         let id = req.params.id;
         let updateObject = req.body;
 
-        //let check = await marioModel.find({_id :id});
+        //let check = await marioChar.find({_id :id});
 
         // if(check.length === 0) throw new Error;
 
-        await marioModel.update(
+        await marioChar.update(
             { _id: id },
             {$set: updateObject},
             {returnOriginal: false}
         );
 
-        let data = await marioModel.findById({_id:id})
+        let data = await marioChar.findById({_id:id})
 
         // console.log(updateObject);
         // console.log(data);
@@ -102,7 +102,7 @@ app.delete("/mario/:id",async (req,res)=>{
 
         let id = req.params.id;
 
-        let data = await marioModel.findById({_id:id});
+        let data = await marioChar.findById({_id:id});
 
         if(!data){
             // res.status(400).send({message: "error.message"});
@@ -110,7 +110,7 @@ app.delete("/mario/:id",async (req,res)=>{
             throw new error;
         }
 
-        await marioModel.deleteOne(
+        await marioChar.deleteOne(
             { _id: id }
         );
 
