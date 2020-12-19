@@ -71,32 +71,21 @@ app.post("/mario",(req,res)=>{
 })
 
 app.patch("/mario/:id",async (req,res)=>{
+
+    let id = req.params.id;
     
-    try {
 
-        let id = req.params.id;
-        let updateObject = req.body;
-
-        //let check = await marioChar.find({_id :id});
-
-        // if(check.length === 0) throw new Error;
-
-        await marioChar.update(
-            { _id: id },
-            {$set: updateObject},
-            {returnOriginal: false}
-        );
-
-        let data = await marioChar.findById({_id:id})
-
-        // console.log(updateObject);
-        // console.log(data);
-
-        res.status(201).send(data);
-        
-    } catch (error) {
-        res.status(400).send({message: error.message});
-    }
+    Model.findOneAndUpdate({
+        _id: id,
+    },{upsert: true}, {
+        ...req.body
+    }, (err, doc) => {
+        if (err) {
+            res.status(400).send({message: error.message});
+        } else {
+            res.json(doc);
+        }
+    });
 })
 
 app.delete("/mario/:id",async (req,res)=>{
