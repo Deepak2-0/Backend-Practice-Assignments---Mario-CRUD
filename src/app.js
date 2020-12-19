@@ -11,12 +11,6 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-// const mario = new marioChar({
-//     name:"Luigi",
-//     weight: 60
-// })
-
-// mario.save();
 
 app.get("/mario", (req,res)=>{
 
@@ -35,15 +29,27 @@ app.get("/mario", (req,res)=>{
 
 app.get("/mario/:id", (req,res)=>{
 
+    // marioChar.findOne({
+    //     _id: id,
+    // }).then((err,data) => {
+    //     if (err) {
+    //         res.status(400).json({"message": error.message});
+    //     } else{
+    //         res.json(data);
+    //     }
+    // });
+
     marioChar.findOne({
         _id: id,
-    }).then((err,data) => {
-        if (err) {
+    }).then((data) => {
+        if (!data) {
             res.status(400).json({"message": error.message});
         } else{
             res.json(data);
         }
     });
+
+
 });
 
 
@@ -61,9 +67,6 @@ app.post("/mario",(req,res)=>{
         weight
     })
     mario.save();
-    // console.log(name);
-    // console.log(weight);
-    // console.log(mario);
     res.status(201).send(mario);
 })
 
@@ -105,17 +108,13 @@ app.delete("/mario/:id",async (req,res)=>{
         let data = await marioChar.findById({_id:id});
 
         if(!data){
-            // res.status(400).send({message: "error.message"});
-            // return;
-            throw new error;
+
+            res.status(400).send({message: error.message});
         }
 
         await marioChar.deleteOne(
             { _id: id }
         );
-
-        // console.log(updateObject);
-        // console.log(data);
 
         res.status(200).send({message: 'character deleted'});
         
