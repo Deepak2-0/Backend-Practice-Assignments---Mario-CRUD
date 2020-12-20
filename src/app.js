@@ -25,21 +25,37 @@ app.get("/mario", (req, res) => {
   });
 });
 
-app.get("/mario/:id", (req, res) => {
+app.get("/mario/:id", async(req, res) => {
 
-    let id = req.params.id;
+    // let id = req.params.id;
   
-    marioChar.findById(id, function (err, data) {
-        if(err){
-            res.status(400).json({ message: err.message });
+    // marioChar.findById(id, function (err, data) {
+    //     if(err){
+    //         res.status(400).json({ message: err.message });
+    //     }
+    //     // else if(!data) {
+    //     //     res.status(400).json({ message: "err.message" });
+    //     // }
+    //     else{
+    //         res.json(data);
+    //     }
+    // });
+
+    let id  = req.params.id;
+
+    try {
+        let mario = await marioChar.findById({_id:id});
+    //console.log(subscriber);
+        if(mario.length === 0){
+            res.status(400).send({message: "id not found"});
+            return;
         }
-        // else if(!data) {
-        //     res.status(400).json({ message: "err.message" });
-        // }
-        else{
-            res.json(data);
-        }
-    });
+        res.json(mario);
+
+    } catch (error) {
+        res.status(400).send({message: error.message});
+        return;
+    }
 });
 
 app.post("/mario", (req, res) => {
