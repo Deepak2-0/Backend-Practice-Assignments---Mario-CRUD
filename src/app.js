@@ -33,9 +33,9 @@ app.get("/mario/:id", (req, res) => {
         if(err){
             res.status(400).json({ message: err.message });
         }
-        else if(!data) {
-            res.status(400).json({ message: "err.message" });
-        }
+        // else if(!data) {
+        //     res.status(400).json({ message: "err.message" });
+        // }
         else{
             res.json(data);
         }
