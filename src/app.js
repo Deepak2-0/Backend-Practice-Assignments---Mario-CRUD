@@ -25,37 +25,12 @@ app.get("/mario", (req, res) => {
   });
 });
 
-app.get("/mario/:id", async(req, res) => {
-
-    // let id = req.params.id;
-  
-    // marioChar.findById(id, function (err, data) {
-    //     if(err){
-    //         res.status(400).json({ message: err.message });
-    //     }
-    //     // else if(!data) {
-    //     //     res.status(400).json({ message: "err.message" });
-    //     // }
-    //     else{
-    //         res.json(data);
-    //     }
-    // });
-
-    let id  = req.params.id;
-
-    try {
-        let mario = await marioChar.findById({_id:id});
-    //console.log(subscriber);
-        if(mario.length === 0){
-            res.status(400).send({message: "id not found"});
-            return;
-        }
-        res.json(mario);
-
-    } catch (error) {
-        res.status(400).send({message: error.message});
-        return;
-    }
+app.get("/mario/:id", (req, res) => {
+    const id = req.params.id;
+    marioChar
+      .findById(id)
+      .then((result) => res.send(result))
+      .catch((err) => res.status(400).send({ message: err.message }));
 });
 
 app.post("/mario", (req, res) => {
@@ -75,43 +50,19 @@ app.post("/mario", (req, res) => {
   res.status(201).send(mario);
 });
 
-app.patch("/mario/:id", async (req, res) => {
-  let id = req.params.id;
-
-  Model.findOneAndUpdate(
-    {
-      _id: id,
-    },
-    { upsert: true },
-    {
-      ...req.body,
-    },
-    (err, doc) => {
-      if (err) {
-        res.status(400).send({ message: error.message });
-      } else {
-        res.json(doc);
-      }
-    }
-  );
-});
-
-app.delete("/mario/:id", async (req, res) => {
-  try {
-    let id = req.params.id;
-
-    let data = await marioChar.findById({ _id: id });
-
-    if (!data) {
-      res.status(400).send({ message: "error.message" });
-    }
-
-    await marioChar.deleteOne({ _id: id });
-
-    res.status(200).send({ message: "character deleted" });
-  } catch (error) {
-    res.status(400).send({ message: error.message });
-  }
-});
-
-module.exports = app;
+app.patch("/mario/:id", (req, res) => {
+    const id = req.params.id;
+    const { name, weight } = req.body;
+  
+    marioChar
+      .findByIdAndUpdate(id, req.body, { new: true })
+      .then((result) => res.send(result))
+      .catch((error) => res.status(400).send({ message: error.message }));
+  });
+  app.delete("/mario/:id", (req, res) => {
+    marioChar
+      .findByIdAndDelete(req.params.id)
+      .then((result) => res.send({ message: "character deleted" }))
+      .catch((err) => res.status(400).send({ message: err.message }));
+  });
+  module.exports = app;
